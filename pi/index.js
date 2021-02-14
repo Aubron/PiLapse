@@ -2,6 +2,8 @@ const Raspistill = require('node-raspistill').Raspistill;
 const { S3Client, PutObjectCommand } = require("@aws-sdk/client-s3");
 const config = require('./config');
 
+console.log(config);
+
 const s3 = new S3Client({
     region: config.awsDefaultRegion,
     accessKeyId: config.awsAccessKey,
@@ -19,7 +21,9 @@ const postImage = async (buffer) => {
         Key: `${Date.now()}.jpg`,
         Body: buffer
     }
-    return s3.send(new PutObjectCommand(uploadParams));
+    return s3.send(new PutObjectCommand(uploadParams)).catch((err) => {
+        console.log('Error sending to S3: ',err);
+    })
 
 }
 
