@@ -6,32 +6,29 @@ console.log(config);
 
 const s3 = new S3Client({
     region: config.awsDefaultRegion,
-    accessKeyId: config.awsAccessKey,
-    secretAccessKey: config.awsSecretKey,
+    credentials: {
+        accessKeyId: config.awsAccessKey,
+        secretAccessKey: config.awsSecretKey,
+    },
 });
 
 //Creates webcam instance
 const camera = new Raspistill();
 
-
-
-const postImage = async (buffer) => {
-    let uploadParams = {
-        Bucket: config.s3BucketName,
-        Key: `${Date.now()}.jpg`,
-        Body: buffer
-    }
-    console.log(uploadParams);
-    return s3.send(new PutObjectCommand(uploadParams)).catch((err, err2) => {
-        console.log('Error sending to S3: ',err,err2);
-    })
-
-}
-
 const main = async () => {
     console.log('Taking new photo...');
     camera.takePhoto().then(async (photo) => {
-        await postImage(photo);
+        
+        let uploadParams = {
+            Bucket: config.s3BucketName,
+            Key: `${Date.now()}.jpg`,
+            Body: photo
+        }
+        console.log(uploadParams);
+
+        await s3.send(new PutObjectCommand({F})).catch((err, err2) => {
+            console.log('Error sending to S3: ',err,err2);
+        })
     });
 }
 
