@@ -1,24 +1,7 @@
 const Raspistill = require('node-raspistill').Raspistill;
 const { S3Client, PutObjectCommand } = require("@aws-sdk/client-s3");
 
-require('dotenv').config()
-
-const OPTIONS = {
-    //Picture related
-    width: 1920,
-    height: 1080,
-    quality: 100,
-
-    // More frames, longer it takes to capture, better quality
-    frames: 60,
-    output: "jpeg",
-    // uses default device
-    device: false,
-
-    //Logging
-    verbose: false
-
-};
+require('dotenv').config({ path: __dirname + '/../.env' })
 
 const s3 = new S3Client({region: process.env.AWS_DEFAULT_REGION});
 
