@@ -1,6 +1,4 @@
-const NodeWebcam = require( "node-webcam" );
-const fetch = require('node-fetch');
-const fs = require('fs');
+const Raspistill = require('node-raspistill').Raspistill;
 const { S3Client, PutObjectCommand } = require("@aws-sdk/client-s3");
 
 require('dotenv').config()
@@ -25,14 +23,15 @@ const OPTIONS = {
 const s3 = new S3Client({region: process.env.AWS_DEFAULT_REGION});
 
 //Creates webcam instance
-const Webcam = NodeWebcam.create( OPTIONS );
+const camera = new Raspistill();
 
-const postImage = async (path) => {
-    let body = fs.readFileSync(path);
+
+
+const postImage = async (buffer) => {
     let uploadParams = {
         Bucket: process.env.S3_BUCKET_NAME,
         Key: `${Date.now()}.jpg`,
-        Body: body
+        Body: buffer
     }
     return s3.send(new PutObjectCommand(uploadParams));
 
@@ -40,19 +39,8 @@ const postImage = async (path) => {
 
 const main = async () => {
     console.log('Taking new photo...');
-    Webcam.capture( "snapshot", async function( err, data ) {
-        if (err) {
-            console.log(`Photo failed: ${err}`)
-        } else {
-            console.log('Photo successful!');
-            let res = await postImage('snapshot.jpg');
-            console.log(res);
-            /*
-            let response = await postImage("snapshot.jpg")
-                .then((res) => res.json());
-            fs.unlinkSync("snapshot.jpg")
-            */
-        }
+    camera.takePhoto().then(async (photo) => {
+        await postImage(photo);
     });
 }
 

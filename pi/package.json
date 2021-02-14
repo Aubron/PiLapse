@@ -10,6 +10,7 @@
     "@aws-sdk/client-s3": "^3.4.1",
     "dotenv": "^8.2.0",
     "node-fetch": "^2.6.1",
+    "node-raspistill": "^1.0.3",
     "node-webcam": "^0.8.0"
   }
 }
