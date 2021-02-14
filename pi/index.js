@@ -1,9 +1,12 @@
 const Raspistill = require('node-raspistill').Raspistill;
 const { S3Client, PutObjectCommand } = require("@aws-sdk/client-s3");
+const config = require('./config');
 
-require('dotenv').config({ path: __dirname + '/../.env' })
-
-const s3 = new S3Client({region: process.env.AWS_DEFAULT_REGION});
+const s3 = new S3Client({
+    region: config.awsDefaultRegion,
+    accessKeyId: config.awsAccessKey,
+    secretAccessKey: config.awsSecretKey,
+});
 
 //Creates webcam instance
 const camera = new Raspistill();
@@ -12,7 +15,7 @@ const camera = new Raspistill();
 
 const postImage = async (buffer) => {
     let uploadParams = {
-        Bucket: process.env.S3_BUCKET_NAME,
+        Bucket: config.s3BucketName,
         Key: `${Date.now()}.jpg`,
         Body: buffer
     }
