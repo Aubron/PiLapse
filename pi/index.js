@@ -26,7 +26,7 @@ const main = async () => {
         }
         console.log(uploadParams);
 
-        await s3.send(new PutObjectCommand({F})).catch((err, err2) => {
+        await s3.send(new PutObjectCommand(uploadParams)).catch((err, err2) => {
             console.log('Error sending to S3: ',err,err2);
         })
     });
