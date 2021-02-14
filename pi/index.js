@@ -22,8 +22,8 @@ const postImage = async (buffer) => {
         Body: buffer
     }
     console.log(uploadParams);
-    return s3.send(new PutObjectCommand(uploadParams)).catch((err) => {
-        console.log('Error sending to S3: ',err);
+    return s3.send(new PutObjectCommand(uploadParams)).catch((err, err2) => {
+        console.log('Error sending to S3: ',err,err2);
     })
 
 }
