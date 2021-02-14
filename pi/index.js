@@ -26,7 +26,7 @@ const OPTIONS = {
 
 };
 
-const s3 = new S3Client();
+const s3 = new S3Client({region: process.env.AWS_DEFAULT_REGION});
 
 //Creates webcam instance
 const Webcam = NodeWebcam.create( OPTIONS );
