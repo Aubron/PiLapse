@@ -5,10 +5,6 @@ const { S3Client, PutObjectCommand } = require("@aws-sdk/client-s3");
 
 require('dotenv').config()
 
-
-// 3 minutes
-const INTERVAL = 1000 * 60 * 3;
-
 const OPTIONS = {
     //Picture related
     width: 1920,
@@ -58,8 +54,6 @@ const main = async () => {
             */
         }
     });
-
-    setTimeout(main, INTERVAL);
 }
 
 
